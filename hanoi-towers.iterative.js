@@ -1,12 +1,17 @@
 /*
-  author : Sy Le
+  	author : Sy Le
 	http://synle.com
 	
 	Solving Hanoi Tower (http://en.wikipedia.org/wiki/Tower_of_Hanoi) using iterative approach.
 	
 	An interactive game can be played at http://www.mathsisfun.com/games/towerofhanoi.html
 	
-	Given 3 tower A,B,C with A is the initial tables. The peg swap is restricted by that the lower peg must be bigger than the upper peg.
+	Given 3 tower A,B,C with:
+	A is the initial peg
+	B is the using peg
+	C is the finish peg
+	
+	The peg swap is restricted by that the lower peg must be bigger than the upper peg.
 	
 	Sample Run : 
 	Problem
