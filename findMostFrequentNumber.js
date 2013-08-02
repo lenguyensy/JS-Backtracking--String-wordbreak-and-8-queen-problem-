@@ -18,6 +18,9 @@
 		  { val: '6', count: 5 },
 		  { val: '7', count: 2 } ]
 */
+
+var Heap = require ('./datastructure.js').Heap;
+
 function FindMostFrequentNumber(arr, numberOfReturn){
 	if (numberOfReturn <= 0) return [];
 	
@@ -56,91 +59,6 @@ function FindMostFrequentNumber(arr, numberOfReturn){
 	}
 	
 	return ret;
-}
-
-//heap
-function Heap (mode, compareFunc){
-	if (typeof mode == 'undefined') throw ('Constructor failed, please specify the heap mode : min heap or max heap');
-	
-	var t = this;
-	var arr = [];//store the heap
-	
-	var lg = function(num){
-		return Math.log(num) / Math.log(2) ;
-	}
-	
-	var getParent = function(idx){
-		//return arr[];
-		return Math.floor((idx - 1) / 2);
-	}
-	
-	var getChildren = function(idx){
-		return [2 * idx + 1, 2 * idx + 2];
-	}
-	
-	t.mode = mode;
-	
-	if (typeof compareFunc == 'undefined')
-		t.compare = mode.toLowerCase() == 'max' ? function(a, b){return a > b} :  function(a,b){return a < b;};
-	else
-		t.compare = compareFunc;
-	
-	
-	t.swap = function(a, b){
-		var tmp = arr[a];
-		arr[a] = arr[b];
-		arr[b] = tmp;
-	}
-	
-	
-	t.add = function(val){
-		var n = arr.length;
-		var parent = getParent(n);
-		
-		//push it on to the array
-		arr.push(val);
-		
-		//swap if not good
-		while (n > 0 && t.compare(arr[n], arr[parent])){
-			//swap itself with its parent
-			t.swap(n, parent);			
-						
-			//move one level up
-			n = parent;
-			parent = getParent(n);
-		}
-	}
-	
-	t.addList = function (inputArr){
-		for (var i = 0; i < inputArr.length; i++)
-			t.add(inputArr[i]);
-	}
-	
-	t.getRoot = function (){
-		return arr[0];
-	}
-	
-	
-	/*get an object at idx*/
-	t.get = function(idx){
-		return arr[idx];
-	}
-	
-	t.removeRoot = function(){
-		var ret = arr.shift();
-		
-		var newList = JSON.parse(JSON.stringify(arr));
-		arr = [];
-		t.addList(newList);
-		
-		return ret;
-	}
-	
-	t.isEmpty = function(){
-		return arr.length == 0;
-	}
-	
-	t.serialize  = function(){return arr;}
 }
 
 //sample run

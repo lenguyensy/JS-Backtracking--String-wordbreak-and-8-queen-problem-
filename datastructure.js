@@ -1,15 +1,44 @@
 /*
-	author: Sy Le
-	synle@synle.com
-	
-	Array implementation of Heap
+	simple stack implentation using javascript array
 */
+exports.Stack = function (){
+	var t = this;
+	var arr = [];//this array store values of the stack
+	
+	t.push = function (val){
+		arr.push(val);
+	}
+	
+	t.pop = function(){
+		if (t.isEmpty())
+			throw('Stack is empty, pop is not allowed');
+		else
+			return arr.pop();
+	}
+	
+	//get the top without popping it up
+	t.peek = function (){
+		if (t.isEmpty())
+			throw('Stack is empty, peek is not allowed');
+		else
+			return arr[arr.length - 1];
+	}
+	
+	t.isEmpty = function(){
+		return arr.length <= 0;
+	}
+	
+	
+	t.serialize = function(){
+		return arr;
+	}
+}
+
 
 /*
-	mode : min or max heap
-	compareFunc : overwrite with your own comparison method.
+	simple heap	implemented using array
 */
-function Heap (mode, compareFunc){
+exports.Heap = function (mode, compareFunc){
 	if (typeof mode == 'undefined') throw ('Constructor failed, please specify the heap mode : min heap or max heap');
 	
 	var t = this;
@@ -35,14 +64,13 @@ function Heap (mode, compareFunc){
 	else
 		t.compare = compareFunc;
 	
-	if (typeof swapFunc == 'undefined')	
-		t.swap = function(a, b){
-			var tmp = arr[a];
-			arr[a] = arr[b];
-			arr[b] = tmp;
-		}
-	else
-		t.swap = swapFunc;
+	
+	t.swap = function(a, b){
+		var tmp = arr[a];
+		arr[a] = arr[b];
+		arr[b] = tmp;
+	}
+	
 	
 	t.add = function(val){
 		var n = arr.length;
@@ -54,8 +82,8 @@ function Heap (mode, compareFunc){
 		//swap if not good
 		while (n > 0 && t.compare(arr[n], arr[parent])){
 			//swap itself with its parent
-			t.swap(n, parent);
-			
+			t.swap(n, parent);			
+						
 			//move one level up
 			n = parent;
 			parent = getParent(n);
@@ -71,14 +99,13 @@ function Heap (mode, compareFunc){
 		return arr[0];
 	}
 	
+	
+	/*get an object at idx*/
+	t.get = function(idx){
+		return arr[idx];
+	}
+	
 	t.removeRoot = function(){
-		var ret = arr.shift();
-		
-		var newList = JSON.parse(JSON.stringify(arr));
-		arr = [];
-		t.addList(newList);
-		
-		/*
 		//better approach instead of adding everything
 		var ret = arr.shift();		
 		var last = arr.pop();
@@ -90,10 +117,27 @@ function Heap (mode, compareFunc){
 		var children = getChildren(n);
 		
 		while (children.length > 0 && children[0] < arr.length){
+			//get the current node
+			var curVal = arr[n];
+			
+			//get its children
 			var leftChild = arr[children[0]];
 			var rightChild = arr[children[1]];
 			
-			//pick a larger child
+			//check to see if the binary heap is valid
+			if (typeof rightChild != 'undefined'){
+				//2 children nodes
+				if (t.compare(curVal, leftChild) && t.compare(curVal, rightChild))
+					break;
+			}
+			else{
+				//1 child node
+				if (t.compare(curVal, leftChild))
+					break;
+			}
+			
+			
+			//pick a larger child if there is 2 child
 			if (typeof rightChild != 'undefined' && t.compare(rightChild, leftChild)){
 				t.swap(n,children[1]);
 				n = children[1];
@@ -105,25 +149,13 @@ function Heap (mode, compareFunc){
 			
 			children = getChildren(n);
 		}
-		*/
 		
 		return ret;
 	}
 	
+	t.isEmpty = function(){
+		return arr.length == 0;
+	}
+	
 	t.serialize  = function(){return arr;}
 }
-
-var maxheap = new Heap('max');
-maxheap.addList([8,71,41,31,10,11,16,46,51,31,21,13]);
-
-for (var i = 0; i < 5; i++){
-	console.log('maxheap', maxheap.serialize());
-	maxheap.removeRoot();
-}
-return;
-
-var minheap = new Heap('min');
-minheap.addList([8,71,41,31,10,11,16,46,51,31,21,13]);
-
-console.log('maxheap', maxheap.serialize());
-console.log('minheap', minheap.serialize());
