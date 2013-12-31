@@ -139,3 +139,70 @@ var testSearchInRotatedSortedArray = new TestHandler({
 //testSearchInRotatedSortedArray.run();
 
 
+
+
+/*
+	given a list of height and weight, maximize tower height
+	note that top must be lighter and shorter than bottom.
+	a = {h:,w}
+*/
+function solveTower(array){
+	//first of all sort the array based on height and then weight
+	array.sort(function(a, b){
+		var h = a.h - b.h;
+		if (h === 0){
+			return a.w - b.w;
+		}
+		else{
+			return h;
+		}
+	});
+
+
+	//doing the max
+	var max_seq = [];
+	var cur_seq = [];	
+	var i = 0;
+	while (i < array.length){
+		var to_push = false;
+
+		if (cur_seq.length == 0){
+			to_push = true;
+		}
+		else if (i < array.length - 1){
+			if (array[i].w < array[i+1].w &&
+				array[i].h < array[i+1].h){
+				to_push = true;
+			}
+		}
+
+		
+		if (to_push){
+			i++;
+			cur_seq.push(array[i]);
+		}
+		else{
+			//mark cur as unfit and start over from there
+			if (cur_seq.length > max_seq.length){
+				max_seq = cur_seq;
+			}
+
+			//start over
+			cur_seq = [];
+		}
+
+	}
+
+	console.log(array);
+	console.log(max_seq);
+
+	return max_seq;
+}
+
+
+solveTower([
+{h: 2, w: 100},
+{h: 2, w: 95},
+{h: 1, w: 201},
+{h: 130, w : 253}
+	]);
