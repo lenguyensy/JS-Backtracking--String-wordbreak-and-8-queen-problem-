@@ -55,17 +55,85 @@ var testFindMinInSortedRotatedArray = new TestHandler({
 });
 //testFindMinInSortedRotatedArray.run();
 
-function findPermutationRecursion(arr, res){
+
+/*
+	print all permutation
+
+	Complexity : O(n^2)
+	Space: O(n)
+*/
+function findPermutationRecursion(arr, res, cb){
 	res = res || [];
+	cb = cb || function(){console.log(arguments[0])}
 
 	if (arr.length == 0)
 		console.log(res);
 	else{
 		for (var i = 0; i < arr.length; i++){
-			var newArr = arr.slice(i, i + 1);
-			console.log(newArr, arr);
+			//create a new list with everything except currrent item
+			var newArr = [];
+			for (var j = 0; j < arr.length; j++)
+				if (i != j)
+					newArr.push(arr[j]);
+
+			var curRes = res.slice();
+			curRes[curRes.length] = arr[i];
+			findPermutationRecursion(newArr, curRes, cb);
 		}
 	}
 }
 
-findPermutationRecursion('abcdef'.split(''));
+
+
+/*
+	print all permutation
+
+	Complexity : O(n * n!)
+	Space: 1
+*/
+function findPermutationBacktrack(arr, from, cb){
+	from = from || 0;
+	cb = cb || function(){console.log(arguments[0])}
+
+	var curArr = arr.slice();
+
+	function swap(a, i, j){
+		var tmp = a[i];
+		a[i] = a[j];
+		a[j] = tmp;
+	}
+
+	if (from == curArr.length - 1)
+		console.log('res:', curArr);
+
+	for (var i = from; i < curArr.length; i++){
+		//swap from with current
+		swap(arr, from, i);
+
+		findPermutationBacktrack(arr, from + 1, cb);
+
+		//backtracking
+		swap(arr, from, i);
+	}
+}
+
+
+var testFindPermutationRecursion = new TestHandler({
+	name : 'findPermutationRecursion',
+	test : function (str) {
+		var arr = str.split('');
+		console.log('input', arr);
+		console.log('output');
+		res = findPermutationRecursion(arr);
+		console.log("");
+	},
+	inputs : [
+		['ab'],
+		['abc'],
+		['abcd']
+	]
+});
+testFindPermutationRecursion.run();
+
+//findPermutationRecursion('abc'.split(''));
+//findPermutationBacktrack('abc'.split(''));
